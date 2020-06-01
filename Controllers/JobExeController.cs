@@ -46,6 +46,7 @@ namespace slave1.Controllers
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
                     process.Start();
+                    process.WaitForExit();
 
                     jobResult.Pid = process.Id;
                     jobResult.ExitCode = process.ExitCode;
@@ -53,7 +54,6 @@ namespace slave1.Controllers
                     jobResult.IdNode = idNode;
                     jobResultList.Add(jobResult);
 
-                    process.WaitForExit();
                 }   
             }
             return Ok(jobResultList);
