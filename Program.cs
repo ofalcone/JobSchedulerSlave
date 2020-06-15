@@ -20,6 +20,7 @@ namespace slave1
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("https://localhost:5201", "http://localhost:5200");
                     webBuilder.UseStartup<Startup>();
                 });
     }
