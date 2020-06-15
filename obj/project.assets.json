@@ -6071,19 +6071,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Orlando Falcone\\.nuget\\packages\\": {}
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Orlando Falcone\\source\\repos\\slave1\\slave1.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\source\\repos\\JobSchedulerSlave\\slave1.csproj",
       "projectName": "slave1",
-      "projectPath": "C:\\Users\\Orlando Falcone\\source\\repos\\slave1\\slave1.csproj",
-      "packagesPath": "C:\\Users\\Orlando Falcone\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Orlando Falcone\\source\\repos\\slave1\\obj\\",
+      "projectPath": "C:\\Users\\Administrator\\source\\repos\\JobSchedulerSlave\\slave1.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrator\\source\\repos\\JobSchedulerSlave\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Orlando Falcone\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -6122,12 +6122,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[3.1.2, 3.1.2]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -6136,7 +6130,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
