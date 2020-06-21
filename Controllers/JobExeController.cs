@@ -14,23 +14,10 @@ namespace slave1.Controllers
     [ApiController]
     public class JobExeController : ControllerBase
     {
-        // GET: api/JobExe
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        string readOut ="";
 
-        // GET: api/JobExe/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/JobExe
         [HttpPost]
-        public IActionResult StartJob(Job job)
+        public async Task<IActionResult> StartJob(Job job)
         {
 
             List<JobResult> jobResultList = new List<JobResult>();
@@ -67,14 +54,23 @@ namespace slave1.Controllers
                     process.StartInfo.Arguments = job.Argument;
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.Arguments = job.Argument;
+
+                    //process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);//(sender, args) => jobResult.StandardOutput = args.Data;
+                    //process.OutputDataReceived += (s, ea) => jobResult.StandardOutput=ea.Data;
+                    process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
                     process.Start();
-                    process.WaitForExit();
+                    process.BeginOutputReadLine();
+                    //jobResult.StandardOutput = await process.StandardOutput.ReadToEndAsync();
+                    //process.WaitForExit();
 
                     jobResult.Pid = process.Id;
-                    //jobResult.ExitCode = process.ExitCode;
-                    //jobResult.StandardOutput = process.StandardOutput.ReadToEnd();
+                    ////jobResult.ExitCode = process.ExitCode;
+                   
                     jobResult.IdNode = idNode;
+                    jobResult.StandardOutput = readOut;
                     jobResultList.Add(jobResult);
+
 
                 }
 
@@ -107,5 +103,10 @@ namespace slave1.Controllers
             return Ok();
         }
 
+
+        private void HandleOutputData(object sender, DataReceivedEventArgs e)
+        {
+            readOut=e.Data;
+        }
     }
 }
