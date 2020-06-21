@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace slave1.Models
 {
-    public class JobKill
+    public class StopJob
     {
         public int Pid { get; set; }
     }

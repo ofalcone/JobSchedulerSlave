@@ -17,42 +17,35 @@ namespace slave1.Controllers
         string readOut = "";
 
         [HttpPost]
-        public IActionResult StartJob(Job job)
+        public IActionResult StartJob(LaunchJob launchJob)
         {
-            if (string.IsNullOrWhiteSpace(job.Path)
-                || job.IdNodeList == null
-                || job.IdNodeList.Count < 1)
+            if (launchJob == null
+                || string.IsNullOrWhiteSpace(launchJob.Path)
+                || launchJob.NodeId == 0)
             {
                 return BadRequest();
             }
-
-            List<JobResult> jobResultList = new List<JobResult>();
+            JobResult jobResult = new JobResult();
 
             try
             {
-                foreach (var idNode in job.IdNodeList)
+                using (Process process = new Process())
                 {
-                    JobResult jobResult = new JobResult();
-
-                    using (Process process = new Process())
+                    process.StartInfo.FileName = launchJob.Path;
+                    if (string.IsNullOrWhiteSpace(launchJob.Argomenti) == false)
                     {
-                        process.StartInfo.FileName = job.Path;
-                        if (string.IsNullOrWhiteSpace(job.Argument)==false)
-                        {
-                            process.StartInfo.Arguments = job.Argument;
-                        }
-                        process.StartInfo.UseShellExecute = false;
-                        process.StartInfo.RedirectStandardOutput = true;
-
-                        process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
-                        process.Start();
-                        process.BeginOutputReadLine();
-
-                        jobResult.Pid = process.Id;
-                        jobResult.IdNode = idNode;
-                        jobResult.StandardOutput = readOut;
-                        jobResultList.Add(jobResult);
+                        process.StartInfo.Arguments = launchJob.Argomenti;
                     }
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+
+                    process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
+                    process.Start();
+                    process.BeginOutputReadLine();
+
+                    jobResult.Pid = process.Id;
+                    jobResult.IdNode = launchJob.NodeId;
+                    jobResult.StandardOutput = readOut;
                 }
             }
             catch (Exception)
@@ -60,22 +53,22 @@ namespace slave1.Controllers
                 return NotFound();
             }
 
-            return Ok(jobResultList);
+            return Ok(jobResult);
         }
 
         [HttpPost]
-        public IActionResult KillJob(JobKill jobKill)
+        public IActionResult KillJob(StopJob stopJob)
         {
             bool killProcessTree = false;
 
-            if (jobKill.Pid == 0)
+            if (stopJob.Pid == 0)
             {
                 return BadRequest();
             }
 
             try
             {
-                var processFound = Process.GetProcessById(jobKill.Pid);
+                var processFound = Process.GetProcessById(stopJob.Pid);
                 processFound.Kill(killProcessTree);
             }
             catch (Exception)

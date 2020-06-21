@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 
 namespace slave1.Models
 {
-    public class Job
+    public class LaunchJob
     {
-        //public int Id { get; set; }
         public string Path { get; set; }
-        public string Argument { get; set; }
-        public  List<int> IdNodeList { get; set; }
+        public string Argomenti { get; set; }
+        public int NodeId { get; set; }
     }
 }
