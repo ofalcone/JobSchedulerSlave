@@ -37,10 +37,12 @@ namespace slave1.Controllers
                     using (Process process = new Process())
                     {
                         process.StartInfo.FileName = job.Path;
-                        process.StartInfo.Arguments = job.Argument;
+                        if (string.IsNullOrWhiteSpace(job.Argument)==false)
+                        {
+                            process.StartInfo.Arguments = job.Argument;
+                        }
                         process.StartInfo.UseShellExecute = false;
                         process.StartInfo.RedirectStandardOutput = true;
-                        process.StartInfo.Arguments = job.Argument;
 
                         process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
                         process.Start();
@@ -70,6 +72,7 @@ namespace slave1.Controllers
             {
                 return BadRequest();
             }
+
             try
             {
                 var processFound = Process.GetProcessById(jobKill.Pid);
