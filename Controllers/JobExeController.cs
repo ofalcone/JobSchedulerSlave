@@ -14,73 +14,53 @@ namespace slave1.Controllers
     [ApiController]
     public class JobExeController : ControllerBase
     {
-        string readOut ="";
+        string readOut = "";
 
         [HttpPost]
-        public async Task<IActionResult> StartJob(Job job)
+        public IActionResult StartJob(Job job)
         {
+            if (string.IsNullOrWhiteSpace(job.Path)
+                || job.IdNodeList == null
+                || job.IdNodeList.Count < 1)
+            {
+                return BadRequest();
+            }
 
             List<JobResult> jobResultList = new List<JobResult>();
 
-            foreach (var idNode in job.IdNodeList)
+            try
             {
-                JobResult jobResult = new JobResult();
-
-                //Task.Run(() =>
-                //{
-                //    using (Process process = new Process())
-                //    {
-                //        process.StartInfo.FileName = job.Path;
-                //        process.StartInfo.Arguments = job.Argument;
-                //        process.StartInfo.UseShellExecute = false;
-                //        process.StartInfo.RedirectStandardOutput = true;
-                //        jobResult.Pid = process.Id;
-
-                //        process.Start();
-                //        //process.WaitForExit();
-
-
-                //        //jobResult.ExitCode = process.ExitCode;
-                //        jobResult.StandardOutput = process.StandardOutput.ReadToEnd();
-                //        jobResult.IdNode = idNode;
-                //        jobResultList.Add(jobResult);
-
-                //    }
-                //});
-
-                using (Process process = new Process())
+                foreach (var idNode in job.IdNodeList)
                 {
-                    process.StartInfo.FileName = job.Path;
-                    process.StartInfo.Arguments = job.Argument;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.Arguments = job.Argument;
+                    JobResult jobResult = new JobResult();
 
-                    //process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);//(sender, args) => jobResult.StandardOutput = args.Data;
-                    //process.OutputDataReceived += (s, ea) => jobResult.StandardOutput=ea.Data;
-                    process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
-                    process.Start();
-                    process.BeginOutputReadLine();
-                    //jobResult.StandardOutput = await process.StandardOutput.ReadToEndAsync();
-                    //process.WaitForExit();
+                    using (Process process = new Process())
+                    {
+                        process.StartInfo.FileName = job.Path;
+                        process.StartInfo.Arguments = job.Argument;
+                        process.StartInfo.UseShellExecute = false;
+                        process.StartInfo.RedirectStandardOutput = true;
+                        process.StartInfo.Arguments = job.Argument;
 
-                    jobResult.Pid = process.Id;
-                    ////jobResult.ExitCode = process.ExitCode;
-                   
-                    jobResult.IdNode = idNode;
-                    jobResult.StandardOutput = readOut;
-                    jobResultList.Add(jobResult);
+                        process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
+                        process.Start();
+                        process.BeginOutputReadLine();
 
-
+                        jobResult.Pid = process.Id;
+                        jobResult.IdNode = idNode;
+                        jobResult.StandardOutput = readOut;
+                        jobResultList.Add(jobResult);
+                    }
                 }
-
             }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
             return Ok(jobResultList);
         }
 
-        //[HttpPost, Route("/KillJob")]
-        //[HttpPost,Route("api/[controller]/[action]")]
-        //[HttpPost("{pid}")]
         [HttpPost]
         public IActionResult KillJob(JobKill jobKill)
         {
@@ -92,7 +72,7 @@ namespace slave1.Controllers
             }
             try
             {
-                var processFound = System.Diagnostics.Process.GetProcessById(jobKill.Pid);
+                var processFound = Process.GetProcessById(jobKill.Pid);
                 processFound.Kill(killProcessTree);
             }
             catch (Exception)
@@ -106,7 +86,7 @@ namespace slave1.Controllers
 
         private void HandleOutputData(object sender, DataReceivedEventArgs e)
         {
-            readOut=e.Data;
+            readOut = e.Data;
         }
     }
 }

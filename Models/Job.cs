@@ -7,7 +7,7 @@ namespace slave1.Models
 {
     public class Job
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Path { get; set; }
         public string Argument { get; set; }
         public  List<int> IdNodeList { get; set; }
