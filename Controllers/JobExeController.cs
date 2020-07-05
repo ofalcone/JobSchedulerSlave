@@ -15,6 +15,7 @@ namespace slave1.Controllers
     public class JobExeController : ControllerBase
     {
         string readOut = "";
+        int exitCode= -999;
 
         [HttpPost]
         public IActionResult StartJob(LaunchJob launchJob)
@@ -39,9 +40,11 @@ namespace slave1.Controllers
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
 
-                    process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
+                    //process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
+                    process.OutputDataReceived += (sender, args) => readOut = args.Data;
                     process.Start();
                     process.BeginOutputReadLine();
+                    //string output = process.StandardOutput.ReadToEnd();
 
                     jobResult.Pid = process.Id;
                     jobResult.IdNode = launchJob.NodeId;
@@ -60,6 +63,7 @@ namespace slave1.Controllers
         public IActionResult KillJob(StopJob stopJob)
         {
             bool killProcessTree = false;
+            JobResult jobResult = null;
 
             if (stopJob.Pid == 0)
             {
@@ -69,20 +73,43 @@ namespace slave1.Controllers
             try
             {
                 var processFound = Process.GetProcessById(stopJob.Pid);
+                processFound.EnableRaisingEvents = true;
+                processFound.Exited += ProcessEnded;
                 processFound.Kill(killProcessTree);
+                processFound.WaitForExit();
+
+                if (processFound != null)
+                {
+                    jobResult = new JobResult
+                    {
+                        Pid = stopJob.Pid,
+                        ExitCode = exitCode
+                    };
+                }
+
+                //processFound.Kill(killProcessTree);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(null);
             }
 
-            return Ok();
+            return Ok(jobResult);
         }
 
 
         private void HandleOutputData(object sender, DataReceivedEventArgs e)
         {
             readOut = e.Data;
+        }
+
+        private void ProcessEnded(object sender, EventArgs e)
+        {
+            var process = sender as Process;
+            if (process != null)
+            {
+                exitCode = process.ExitCode;
+            }
         }
     }
 }
