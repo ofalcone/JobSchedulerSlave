@@ -35,16 +35,23 @@ namespace slave1.Controllers
                     process.StartInfo.FileName = launchJob.Path;
                     if (string.IsNullOrWhiteSpace(launchJob.Argomenti) == false)
                     {
-                        process.StartInfo.Arguments = launchJob.Argomenti;
+                        process.StartInfo.Arguments =$"\"{launchJob.Argomenti}\"";
                     }
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.RedirectStandardOutput = true;
 
-                    //process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
-                    process.OutputDataReceived += (sender, args) => readOut = args.Data;
+                    process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
+                    //process.OutputDataReceived += (sender, args) => readOut = args.Data;
                     process.Start();
                     process.BeginOutputReadLine();
-                    //string output = process.StandardOutput.ReadToEnd();
+                    //readOut = process.StandardOutput.ReadToEnd();
+
+                    //var output = new List<string>();
+
+                    //while (process.StandardOutput.Peek() > -1)
+                    //{
+                    //    output.Add(process.StandardOutput.ReadLine());
+                    //}
 
                     jobResult.Pid = process.Id;
                     jobResult.IdNode = launchJob.NodeId;
