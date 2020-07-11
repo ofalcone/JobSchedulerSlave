@@ -23,6 +23,7 @@ namespace slave1.Controllers
         {
             if (launchJob == null
                 || string.IsNullOrWhiteSpace(launchJob.Path)
+                || !System.IO.Directory.Exists(launchJob.Path)
                 || launchJob.NodeId == 0)
             {
                 return BadRequest();
