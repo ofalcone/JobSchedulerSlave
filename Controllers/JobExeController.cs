@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,10 @@ namespace slave1.Controllers
 
                     jobResult.Pid = process.Id;
                     jobResult.IdNode = launchJob.NodeId;
+                    if (string.IsNullOrWhiteSpace(readOut))
+                    {
+                        Thread.Sleep(500);
+                    }
                     jobResult.StandardOutput = readOut;
                 }
             }
@@ -96,7 +101,7 @@ namespace slave1.Controllers
 
                 //processFound.Kill(killProcessTree);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return NotFound(null);
             }
