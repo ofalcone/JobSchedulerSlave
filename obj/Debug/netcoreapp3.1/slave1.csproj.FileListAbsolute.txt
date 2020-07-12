@@ -206,3 +206,5 @@ C:\Users\Administrator\source\repos\JobSchedulerSlave\obj\Debug\netcoreapp3.1\st
 C:\Users\Administrator\source\repos\JobSchedulerSlave\obj\Debug\netcoreapp3.1\slave1.dll
 C:\Users\Administrator\source\repos\JobSchedulerSlave\obj\Debug\netcoreapp3.1\slave1.pdb
 C:\Users\Administrator\source\repos\JobSchedulerSlave\obj\Debug\netcoreapp3.1\slave1.genruntimeconfig.cache
+C:\Users\Administrator\source\repos\JobSchedulerSlave\bin\Debug\netcoreapp3.1\LaunchExe\test.deps.json
+C:\Users\Administrator\source\repos\JobSchedulerSlave\bin\Debug\netcoreapp3.1\LaunchExe\test.runtimeconfig.json

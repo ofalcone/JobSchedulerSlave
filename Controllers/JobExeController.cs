@@ -23,7 +23,6 @@ namespace slave1.Controllers
         {
             if (launchJob == null
                 || string.IsNullOrWhiteSpace(launchJob.Path)
-                || !System.IO.Directory.Exists(launchJob.Path)
                 || launchJob.NodeId == 0)
             {
                 return BadRequest();
@@ -43,17 +42,8 @@ namespace slave1.Controllers
                     process.StartInfo.RedirectStandardOutput = true;
 
                     process.OutputDataReceived += new DataReceivedEventHandler(HandleOutputData);
-                    //process.OutputDataReceived += (sender, args) => readOut = args.Data;
                     process.Start();
                     process.BeginOutputReadLine();
-                    //readOut = process.StandardOutput.ReadToEnd();
-
-                    //var output = new List<string>();
-
-                    //while (process.StandardOutput.Peek() > -1)
-                    //{
-                    //    output.Add(process.StandardOutput.ReadLine());
-                    //}
 
                     jobResult.Pid = process.Id;
                     jobResult.IdNode = launchJob.NodeId;
@@ -99,8 +89,6 @@ namespace slave1.Controllers
                         ExitCode = exitCode
                     };
                 }
-
-                //processFound.Kill(killProcessTree);
             }
             catch (Exception )
             {
