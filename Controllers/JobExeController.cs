@@ -83,6 +83,11 @@ namespace slave1.Controllers
 
                 if (processFound != null)
                 {
+                    if (exitCode == -999)
+                    {
+                        Thread.Sleep(200);
+                    }
+
                     jobResult = new JobResult
                     {
                         Pid = stopJob.Pid,
