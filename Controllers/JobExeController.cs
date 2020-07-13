@@ -49,7 +49,7 @@ namespace slave1.Controllers
                     jobResult.IdNode = launchJob.NodeId;
                     if (string.IsNullOrWhiteSpace(readOut))
                     {
-                        Thread.Sleep(500);
+                        Thread.Sleep(300);
                     }
                     jobResult.StandardOutput = readOut;
                 }
@@ -85,7 +85,7 @@ namespace slave1.Controllers
                 {
                     if (exitCode == -999)
                     {
-                        Thread.Sleep(200);
+                        Thread.Sleep(300);
                     }
 
                     jobResult = new JobResult
